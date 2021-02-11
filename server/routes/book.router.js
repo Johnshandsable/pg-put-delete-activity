@@ -5,6 +5,8 @@ const pool = require('../modules/pool');
 
 // Get all books
 router.get('/', (req, res) => {
+  console.log('SERVER - GET inside /books ');
+
   let queryText = 'SELECT * FROM "books" ORDER BY "title";';
   pool
     .query(queryText)
@@ -21,8 +23,15 @@ router.get('/', (req, res) => {
 // Adds a new book to the list of awesome reads
 // Request body must be a book object with a title and author.
 router.post('/', (req, res) => {
+  console.log('SERVER - POST inside /books');
   let newBook = req.body;
   console.log(`Adding book`, newBook);
+
+  // Makes sure the user doesn't pass in empty values
+  if (req.body.author || req.body.author == '') {
+    res.sendStatus(400);
+    return;
+  }
 
   let queryText = `INSERT INTO "books" ("author", "title")
                    VALUES ($1, $2);`;

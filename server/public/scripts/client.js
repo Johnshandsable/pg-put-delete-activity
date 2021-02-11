@@ -5,20 +5,36 @@ $(document).ready(function () {
 });
 
 function addClickHandlers() {
+  // EVENT HANDLERS
   $('#submitBtn').on('click', handleSubmit);
   $(document).on('click', '.deleteBtn', deleteBook);
   $(document).on('click', '.updateBtn', updateBook);
-  // TODO - Add code for edit & delete buttons
+  $(document).on('click', '#btnSortAuthor', sortAuthor);
+  $(document).on('click', '#btnSortTitle', sortTitle);
+} // end addClickHandlers
+
+let sortByAuthor = false;
+let sortByTitle = false;
+
+function sortAuthor() {
+  console.log('inside sortAuthor');
+  sortByAuthor = true;
+  sortByTitle = false;
 }
 
-function handleSubmit(event) {
-  event.preventDefault();
+function sortTitle() {
+  console.log('inside sortTitle');
+  sortByTitle = true;
+  sortByAuthor = false;
+}
+
+function handleSubmit() {
   console.log('Submit button clicked.');
   let book = {};
   book.author = $('#author').val();
   book.title = $('#title').val();
   addBook(book);
-}
+} // end handleSubmit
 
 // adds a book to the database
 function addBook(bookToAdd) {
@@ -33,9 +49,11 @@ function addBook(bookToAdd) {
     })
     .catch(function (error) {
       console.log('Error in POST', error);
-      alert('Unable to add book at this time. Please try again later.');
+      alert(
+        'Unable to add book at this time. Please make sure both the Author and the Title are filled out.'
+      );
     });
-}
+} // end addBook
 
 // refreshBooks will get all books from the server and render to page
 function refreshBooks() {
@@ -70,8 +88,7 @@ function renderBooks(books) {
   }
 }
 
-function deleteBook(event) {
-  event.preventDefault();
+function deleteBook() {
   console.log('CLIENT - inside deleteBook');
   /*
     Makes a DELETE request to the server at /books/delete/id
@@ -95,7 +112,7 @@ function deleteBook(event) {
 function updateBook() {
   /*
   Makes a PUT request to /books/put/id
-  Should update a book as isRead on server side
+  Should update a book as isRead on server 
   */
   console.log('CLIENT - inside updateBook');
   const bookId = $(this).data('id');
